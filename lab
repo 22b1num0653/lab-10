@@ -1,0 +1,221 @@
+#include <iostream>
+#include <cmath>
+#include <vector>
+
+using namespace std;
+const double PI = 3.14;
+
+template <class T>
+class LinkedList
+{
+private:
+    vector<T> a;
+public:
+
+    void add(T t){
+        a.push_back(t);
+    }
+
+    void insert(T t, int index){
+        a.insert(a.begin() + index, t);
+    }
+
+    T get(int index){
+        return a[index];
+    }
+
+    void remove(int index){
+        a.erase(a.begin() + index);
+    }
+
+    int leght(){
+        int i;
+        i = a.size();
+        return i;
+    }
+
+    void display(){
+        for(int i; i<a.size(); i++){
+            cout << a[i] <<" ";
+        }
+
+        cout << endl;
+    }
+};
+
+class Shape{
+protected:
+    string name;
+
+public:
+    Shape(string n = "") {
+        name = n;
+    }
+
+    virtual void print(){
+        cout << name << " Talbai: " << area() << endl;
+    }
+    
+    virtual double area() = 0;
+    virtual ~Shape() {};
+    
+};
+
+class Shape2D : public Shape {
+protected:
+    double x[4];
+    double y[4];
+    int Count;
+
+public:
+    Shape2D(string n = "", int c = 0) : Shape(n) {
+        Count = c;
+    }
+
+    void print_orion_kordinat() {
+        for (int i = 0; i < Count; i++) {
+            cout << "(" << x[i] << ", " << y[i] << ") ";
+        }
+        cout << endl;
+    }
+};
+
+
+class Circle : public Shape2D {
+private:
+    double r;
+
+public:
+    Circle(string n, double radius) : Shape2D(n, 0) {
+        r  = radius;
+    }
+
+    double area() {
+        return PI * r * r;
+    }
+
+    double perimeter() {
+        return 2 * PI * r;
+    }
+
+    void print() override{
+        Shape::print();
+    }
+};
+
+class Square : public Shape2D {
+private:
+    double s;
+
+public:
+    Square(string n, double side)
+        : Shape2D(n, 4) {
+        s = side;
+    }
+
+    double area() {
+        return s * s;
+    }
+
+    double perimeter() {
+        return 4 * s;
+    }
+
+    void print() override{
+        Shape::print();
+    }
+};
+
+class Triangle : public Shape2D {
+private:
+    double side;
+
+public:
+    Triangle(string n, double s)
+        : Shape2D(n, 3) {
+        side = s;
+
+        double height = (sqrt(3) / 2) * s;
+    }
+
+    double area() {
+        return (sqrt(3.0) / 4.0) * side * side;
+    }
+
+    double perimeter() {
+        return 3 * side;
+    }
+
+    void print() override{
+        Shape::print();
+        
+    }
+};
+
+void Usuh_erembleh(LinkedList<Shape*> &list){
+    for(int i=0; i< list.leght()-1; i++){
+        for (int j = 0; j < list.leght()-i-1; j++)
+        {
+            if(list.get(j) -> area() > list.get(j+1) -> area())
+            {
+                Shape* t = list.get(j);
+                list.insert(list.get(j+1),j);
+                list.remove(j+1);
+                list.insert(t, j+1);
+                list.remove(j+2);
+            }
+        }
+        
+    }
+}
+
+
+
+
+int main(){
+    LinkedList<Shape*> S;
+
+    S.add(new Circle("Circle",3));
+    S.add(new Circle("Circle",5));
+    S.add(new Circle("Circle",7));
+    S.add(new Circle("Circle",2));
+    S.add(new Circle("Circle",6));
+    S.add(new Circle("Circle",4));
+    S.add(new Circle("Circle",8));
+    S.add(new Square("Square",5));
+    S.add(new Square("Square",9));
+    S.add(new Square("Square",3));
+    S.add(new Square("Square",6));
+    S.add(new Square("Square",2));
+    S.add(new Square("Square",7));
+    S.add(new Square("Square",4));
+    S.add(new Triangle("Triangle",4));
+    S.add(new Triangle("Triangle",8));
+    S.add(new Triangle("Triangle",5));
+    S.add(new Triangle("Triangle",9));
+    S.add(new Triangle("Triangle",6));
+    S.add(new Triangle("Triangle",3));
+
+    cout<<"Erembelhiin umnu"<<endl;
+
+    for(int i=0; i<S.leght(); i++){
+        S.get(i)->print();
+    }
+
+    cout << endl;
+
+    Usuh_erembleh(S);
+    cout << "Erembelsenii daraa "<<endl;
+    for (int i = 0; i < S.leght(); i++)
+    {
+        S.get(i)->print();
+    }
+
+    for(int i = 0; i < S.leght(); i++)
+    {
+        delete S.get(i);
+    }
+
+    return  0;
+    
+}
